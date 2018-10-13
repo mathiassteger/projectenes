@@ -19,10 +19,13 @@ public class GameClass extends Game {
 
 	@Override
 	public void render () {
-		screen.render(Gdx.graphics.getDeltaTime());
+
+	    screen.render(Gdx.graphics.getDeltaTime());
+
 	}
 	
 	@Override
 	public void dispose () {
+	    screen.dispose();
 	}
 }
