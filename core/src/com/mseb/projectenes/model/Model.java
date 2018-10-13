@@ -8,8 +8,6 @@ import com.mseb.projectenes.utilities.propertychanges.PropertyChangeSupport;
 
 public class Model {
     private static final Model INSTANCE = new Model();
-    public static volatile int enemyCount = 0;
-    public static volatile Boolean paused = false;
     public static PropertyChangeSupport screenPCS = new PropertyChangeSupport();
     public static Screen screen;
     public static Skin skin;
@@ -25,10 +23,6 @@ public class Model {
     public static Model getInstance() {
         return INSTANCE;
     }
-
-
-
-
 
     public void setScreen(Screen screen) {
 
