@@ -17,6 +17,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     Stage stage;
     OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
+    testlui luidetest;
+
     float width = 800, height = 800;
     //Model.map.getPixelWidth(), height = Model.map.getPixelHeight();
     double zoomDelta = 0.02;
@@ -24,6 +26,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
         camera = new OrthographicCamera(width, height);
+        camera.setToOrtho(true,width,height);
         camera.position.set(width / 2, height / 2, 0);
         camera.viewportWidth = width;
         camera.viewportHeight = height;
@@ -38,6 +41,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
 
         initListeners();
+        this.luidetest = new testlui(0.0f,0.0f, 100, 100);
+        this.stage.addActor(luidetest);
     }
 
     private void initListeners() {
@@ -53,6 +58,9 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     public void render(float delta) {
         Gdx.gl.glClearColor(127, 127, 127, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
 
     }
 
@@ -83,7 +91,9 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        Gdx.app.debug("", "Tapping on (" + x + ", " + y + ")");
+        this.luidetest.setX(x);
+        this.luidetest.setY(y);
+
         return false;
     }
 
