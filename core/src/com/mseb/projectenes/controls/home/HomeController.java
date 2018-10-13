@@ -21,7 +21,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     Stage stage;
     OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
-    ArrayList<ArrayList<Vector3>> polinePoints = new ArrayList();
+    ArrayList<ArrayList<Vector2>> polinePoints = new ArrayList();
     int currentLineIndex = 0;
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     boolean firstPan = true;
@@ -48,7 +48,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         initListeners();
         this.luidetest = new testlui(0.0f, 0.0f, 100, 100);
         this.stage.addActor(luidetest);
-        polinePoints.add(new ArrayList<Vector3>());
+        polinePoints.add(new ArrayList<Vector2>());
     }
 
     private void initListeners() {
@@ -68,6 +68,9 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
+        Gdx.gl.glLineWidth(2);
+
+        Gdx.app.debug("", "" + polinePoints.size());
         for (int h = 0; h < polinePoints.size(); h++) {
             for (int i = 0; i < polinePoints.get(h).size() - 1; i++) {
                 shapeRenderer.setProjectionMatrix(camera.combined);
@@ -126,13 +129,14 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
-        polinePoints.get(currentLineIndex).add(coordinates3D);
+        Vector2 coordinates2D = new Vector2 (coordinates3D.x,coordinates3D.y);
+        polinePoints.get(currentLineIndex).add(coordinates2D);
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        polinePoints.add(new ArrayList<Vector3>());
+        polinePoints.add(new ArrayList<Vector2>());
         currentLineIndex++;
         return true;
     }
