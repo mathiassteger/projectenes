@@ -71,6 +71,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
+        Gdx.app.debug("", "" + polinePoints.size());
         for (int i = 0; i<polinePoints.size()-1; i++) {
             shapeRenderer.setProjectionMatrix(camera.combined);
             shapeRenderer.setColor(Color.BLACK);
@@ -158,6 +159,5 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     public void dispose() {
         Gdx.app.debug("", "disposing");
         stage.dispose();
-        this.dispose();
     }
 }
