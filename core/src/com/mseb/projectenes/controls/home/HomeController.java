@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,7 +27,6 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
         camera = new OrthographicCamera(width, height);
-        camera.setToOrtho(true,width,height);
         camera.position.set(width / 2, height / 2, 0);
         camera.viewportWidth = width;
         camera.viewportHeight = height;
@@ -41,7 +41,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
 
         initListeners();
-        this.luidetest = new testlui(0.0f,0.0f, 100, 100);
+        this.luidetest = new testlui(0.0f, 0.0f, 100, 100);
         this.stage.addActor(luidetest);
     }
 
@@ -91,8 +91,9 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        this.luidetest.setX(x);
-        this.luidetest.setY(y);
+        Vector3 coordinates = camera.unproject(new Vector3(x, y, 0));
+        this.luidetest.setX(coordinates.x);
+        this.luidetest.setY(coordinates.y);
 
         return false;
     }
@@ -110,22 +111,11 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        camera.position.x -= deltaX;
-        camera.position.y += deltaY;
-
-        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
-        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
-
-        camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, width - effectiveViewportWidth / 2f);
-        camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, height - effectiveViewportHeight / 2f);
-        camera.update();
-
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        Gdx.app.debug("", "Stopping pan");
         return true;
     }
 
