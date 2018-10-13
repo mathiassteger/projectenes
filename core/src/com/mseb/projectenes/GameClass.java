@@ -8,24 +8,22 @@ import com.mseb.projectenes.model.Model;
 
 public class GameClass extends Game {
 
-	
-	@Override
-	public void create () {
-		Gdx.app.setApplicationLogger(new CustomLogger());
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		Model.libgdxInit();
-		setScreen(Model.screen);
-	}
 
-	@Override
-	public void render () {
+    @Override
+    public void create() {
+        Gdx.app.setApplicationLogger(new CustomLogger());
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        Model.libgdxInit();
+        setScreen(Model.screen);
+    }
 
-	    screen.render(Gdx.graphics.getDeltaTime());
+    @Override
+    public void render() {
+        screen.render(Gdx.graphics.getDeltaTime());
+    }
 
-	}
-	
-	@Override
-	public void dispose () {
-	    screen.dispose();
-	}
+    @Override
+    public void dispose() {
+        screen.dispose();
+    }
 }
