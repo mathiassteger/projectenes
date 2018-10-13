@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,8 +21,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     Stage stage;
     OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
-    Vector3 startPoint, endPoint;
-    ArrayList<Vector3> polinePoints = new ArrayList();
+    ArrayList<ArrayList<Vector3>> polinePoints = new ArrayList();
+    int currentLineIndex = 0;
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     boolean firstPan = true;
     testlui luidetest;
@@ -52,6 +50,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         initListeners();
         this.luidetest = new testlui(0.0f, 0.0f, 100, 100);
         this.stage.addActor(luidetest);
+        polinePoints.add(new ArrayList<Vector3>());
     }
 
     private void initListeners() {
@@ -72,12 +71,14 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.draw();
 
         Gdx.app.debug("", "" + polinePoints.size());
-        for (int i = 0; i<polinePoints.size()-1; i++) {
-            shapeRenderer.setProjectionMatrix(camera.combined);
-            shapeRenderer.setColor(Color.BLACK);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.line(polinePoints.get(i), polinePoints.get(i+1));
-            shapeRenderer.end();
+        for (int h = 0; h < polinePoints.size(); h++) {
+            for (int i = 0; i < polinePoints.get(h).size() - 1; i++) {
+                shapeRenderer.setProjectionMatrix(camera.combined);
+                shapeRenderer.setColor(Color.BLACK);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.line(polinePoints.get(h).get(i), polinePoints.get(h).get(i + 1));
+                shapeRenderer.end();
+            }
         }
     }
 
@@ -126,17 +127,14 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
-
-        polinePoints.add(coordinates3D);
-
-
-        
+        polinePoints.get(currentLineIndex).add(coordinates3D);
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        firstPan = true;
+        polinePoints.add(new ArrayList<Vector3>());
+        currentLineIndex++;
         return true;
     }
 
