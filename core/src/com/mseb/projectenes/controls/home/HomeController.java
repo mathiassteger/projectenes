@@ -27,16 +27,14 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     boolean firstPan = true;
     testlui luidetest;
 
-    float width = 1000, height = 1000;
+    float width = 3000, height = 500;
     //Model.map.getPixelWidth(), height = Model.map.getPixelHeight();
     double zoomDelta = 0.02;
 
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
-        camera = new OrthographicCamera(width, height);
-        camera.position.set(width / 2, height / 2, 0);
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
+        camera = new OrthographicCamera(500, height);
+        camera.position.set(0, 0, 0);
         camera.update();
 
         Viewport screenViewport = new StretchViewport(width, height, camera);
@@ -70,7 +68,6 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        Gdx.app.debug("", "" + polinePoints.size());
         for (int h = 0; h < polinePoints.size(); h++) {
             for (int i = 0; i < polinePoints.get(h).size() - 1; i++) {
                 shapeRenderer.setProjectionMatrix(camera.combined);
@@ -80,6 +77,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
                 shapeRenderer.end();
             }
         }
+
+        camera.position.x += 10;
     }
 
     @Override
