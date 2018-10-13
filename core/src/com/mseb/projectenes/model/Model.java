@@ -25,6 +25,8 @@ public class Model {
     }
 
     public void setScreen(Screen screen) {
+        this.screen = screen;
+        screenPCS.firePropertyChange(null, this.screen);
 
     }
 }
