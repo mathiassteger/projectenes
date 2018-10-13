@@ -24,8 +24,10 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     ArrayList<ArrayList<Vector2>> polinePoints = new ArrayList();
     int currentLineIndex = 0;
     ShapeRenderer shapeRenderer = new ShapeRenderer();
+    Vector2 currentPress;
     boolean firstPan = true;
     testlui luidetest;
+    boolean isPressed = false;
 
     float width = 3000, height = 500;
     //Model.map.getPixelWidth(), height = Model.map.getPixelHeight();
@@ -70,7 +72,12 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
         Gdx.gl.glLineWidth(2);
 
-        Gdx.app.debug("", "" + polinePoints.size());
+        int pan = 10;
+        if (isPressed) {
+            polinePoints.get(currentLineIndex).add(currentPress);
+            currentPress.x += pan;
+        }
+
         for (int h = 0; h < polinePoints.size(); h++) {
             for (int i = 0; i < polinePoints.get(h).size() - 1; i++) {
                 shapeRenderer.setProjectionMatrix(camera.combined);
@@ -80,8 +87,7 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
                 shapeRenderer.end();
             }
         }
-
-        camera.position.x += 10;
+        camera.position.x += pan;
     }
 
     @Override
@@ -106,18 +112,24 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
+        Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
+        Vector2 coordinates2D = new Vector2(coordinates3D.x, coordinates3D.y);
+        this.currentPress = coordinates2D;
+        this.isPressed = true;
         return false;
     }
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-
+        polinePoints.add(new ArrayList<Vector2>());
+        currentLineIndex++;
+        this.isPressed = false;
         return false;
     }
 
+
     @Override
     public boolean longPress(float x, float y) {
-
         return false;
     }
 
@@ -128,17 +140,20 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
+        this.isPressed = false;
         Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
-        Vector2 coordinates2D = new Vector2 (coordinates3D.x,coordinates3D.y);
+        Vector2 coordinates2D = new Vector2(coordinates3D.x, coordinates3D.y);
         polinePoints.get(currentLineIndex).add(coordinates2D);
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        polinePoints.add(new ArrayList<Vector2>());
-        currentLineIndex++;
-        return true;
+        Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
+        Vector2 coordinates2D = new Vector2(coordinates3D.x, coordinates3D.y);
+        this.currentPress = coordinates2D;
+        isPressed = true;
+        return false;
     }
 
     @Override
