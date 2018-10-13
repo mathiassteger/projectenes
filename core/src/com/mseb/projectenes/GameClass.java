@@ -1,34 +1,28 @@
 package com.mseb.projectenes;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mseb.projectenes.logging.CustomLogger;
+import com.mseb.projectenes.model.Model;
 
-public class GameClass extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+public class GameClass extends Game {
+
 	
 	@Override
 	public void create () {
-		//hello matze
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		Gdx.app.setApplicationLogger(new CustomLogger());
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		Model.libgdxInit();
+		setScreen(Model.screen);
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		screen.render(Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
 	}
 }
