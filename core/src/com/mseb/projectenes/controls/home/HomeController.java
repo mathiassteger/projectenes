@@ -128,6 +128,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
         polinePoints.add(coordinates3D);
 
+
+        
         return true;
     }
 
@@ -154,6 +156,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public void dispose() {
+        Gdx.app.debug("", "disposing");
         stage.dispose();
+        this.dispose();
     }
 }
