@@ -16,12 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+
 
 public class HomeController implements Screen, GestureDetector.GestureListener {
     Stage stage;
     OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
     Vector3 startPoint, endPoint;
+    ArrayList<Vector3> polinePoints = new ArrayList();
     boolean firstPan = true;
     testlui luidetest;
 
@@ -67,11 +70,12 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        if (startPoint != null && endPoint != null) {
+        for (int i = 0; i<polinePoints.size()-1; i++) {
             ShapeRenderer shapeRenderer = new ShapeRenderer();
+            shapeRenderer.setProjectionMatrix(camera.combined);
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.line(startPoint, endPoint);
+            shapeRenderer.line(polinePoints.get(i), polinePoints.get(i+1));
             shapeRenderer.end();
         }
     }
@@ -122,15 +126,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
 
-        this.luidetest.setPosition(coordinates3D.x, coordinates3D.y);
+        polinePoints.add(coordinates3D);
 
-        if (firstPan) {
-            firstPan = false;
-            this.startPoint = coordinates3D;
-        } else {
-            this.endPoint = coordinates3D;
-        }
-        
         return true;
     }
 
