@@ -25,10 +25,11 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     InputMultiplexer inputMultiplexer;
     Vector3 startPoint, endPoint;
     ArrayList<Vector3> polinePoints = new ArrayList();
+    ShapeRenderer shapeRenderer = new ShapeRenderer();
     boolean firstPan = true;
     testlui luidetest;
 
-    float width = 800, height = 800;
+    float width = 1000, height = 1000;
     //Model.map.getPixelWidth(), height = Model.map.getPixelHeight();
     double zoomDelta = 0.02;
 
@@ -71,7 +72,6 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.draw();
 
         for (int i = 0; i<polinePoints.size()-1; i++) {
-            ShapeRenderer shapeRenderer = new ShapeRenderer();
             shapeRenderer.setProjectionMatrix(camera.combined);
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
