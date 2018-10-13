@@ -3,10 +3,13 @@ package com.mseb.projectenes.controls.home;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,6 +21,8 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
     Stage stage;
     OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
+    Vector3 startPoint, endPoint;
+    boolean firstPan = true;
     testlui luidetest;
 
     float width = 800, height = 800;
@@ -62,6 +67,13 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
+        if (startPoint != null && endPoint != null) {
+            ShapeRenderer shapeRenderer = new ShapeRenderer();
+            shapeRenderer.setColor(Color.BLACK);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.line(startPoint, endPoint);
+            shapeRenderer.end();
+        }
     }
 
     @Override
@@ -91,9 +103,6 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        Vector3 coordinates = camera.unproject(new Vector3(x, y, 0));
-        this.luidetest.setX(coordinates.x);
-        this.luidetest.setY(coordinates.y);
 
         return false;
     }
@@ -111,11 +120,23 @@ public class HomeController implements Screen, GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
+        Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
+
+        this.luidetest.setPosition(coordinates3D.x, coordinates3D.y);
+
+        if (firstPan) {
+            firstPan = false;
+            this.startPoint = coordinates3D;
+        } else {
+            this.endPoint = coordinates3D;
+        }
+        
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
+        firstPan = true;
         return true;
     }
 
