@@ -44,7 +44,7 @@ public class Testlui extends Actor {
     public void act(float delta) {
 
         if (iscolliding()) {
-
+            Model.yspeed *= -1;
         } else {
             setY(getY() - Model.yspeed);
             hitbox.x = getX() + getWidth() / 2;
@@ -58,7 +58,7 @@ public class Testlui extends Actor {
     private boolean iscolliding() {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
-                if (intersectSegmentCircle(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(getX(), getY()), hitbox.radius)) {
+                if (intersectSegmentCircle(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(hitbox.x, hitbox.y), hitbox.radius*hitbox.radius)) {
                     return true;
                 }
             }
