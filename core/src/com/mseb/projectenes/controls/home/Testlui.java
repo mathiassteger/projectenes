@@ -45,6 +45,10 @@ public class Testlui extends Actor {
 
         if (iscolliding()) {
             Model.yspeed *= -1;
+            setY(getY() - Model.yspeed);
+            hitbox.x = getX() + getWidth() / 2;
+            hitbox.y = getY() + getHeight() / 2;
+
         } else {
             setY(getY() - Model.yspeed);
             hitbox.x = getX() + getWidth() / 2;
