@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mseb.projectenes.model.Model;
 
 import static com.badlogic.gdx.math.Intersector.intersectSegmentCircle;
+import static com.mseb.projectenes.model.Model.xcceleration;
+import static com.mseb.projectenes.model.Model.ycceleration;
 
 public class Testlui extends Actor {
     private Texture image;
@@ -44,15 +46,23 @@ public class Testlui extends Actor {
     public void act(float delta) {
 
         if (iscolliding()) {
-            Model.yspeed *= -1;
+            Model.yspeed *= -0.9;
+            //ycceleration *= -1;
+
             setY(getY() - Model.yspeed);
             hitbox.x = getX() + getWidth() / 2;
             hitbox.y = getY() + getHeight() / 2;
+
+            Model.xspeed -= xcceleration;
+
 
         } else {
             setY(getY() - Model.yspeed);
             hitbox.x = getX() + getWidth() / 2;
             hitbox.y = getY() + getHeight() / 2;
+
+            Model.yspeed += ycceleration;
+            Model.xspeed += xcceleration;
 
         }
 
