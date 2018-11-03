@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mseb.projectenes.model.Model;
 
 import java.util.ArrayList;
 
@@ -23,8 +24,7 @@ public class HomeController implements Screen, InputProcessor {
     InputMultiplexer inputMultiplexer;
     ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
     ShapeRenderer shapeRenderer = new ShapeRenderer();
-    testlui luidetest;
-    int pan = 10;
+    Testlui luidetest;
     /**
      * Signals which lines touchpoints are currently added to
      */
@@ -52,7 +52,7 @@ public class HomeController implements Screen, InputProcessor {
 
         initListeners();
 
-        this.luidetest = new testlui(0.0f, 0.0f, 100, 100);
+        this.luidetest = new Testlui(0.0f, 0.0f, 100, 100);
         this.stage.addActor(luidetest);
         lineContainer.add(new ArrayList<Vector2>());
     }
@@ -80,7 +80,7 @@ public class HomeController implements Screen, InputProcessor {
 
         drawLines();
 
-        camera.position.x += pan;
+        camera.position.x += Model.speed;
     }
 
     /**
