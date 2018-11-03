@@ -37,7 +37,7 @@ public class Testlui extends Actor {
 
     @Override
     public void act(float delta){
-        setX(getX()+Model.speed);
+        setY(getY()-Model.yspeed);
         hitbox.x = getX();
         hitbox.y = getY();
 

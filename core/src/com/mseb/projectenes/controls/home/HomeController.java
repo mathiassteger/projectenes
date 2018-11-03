@@ -34,7 +34,7 @@ public class HomeController implements Screen, InputProcessor {
      * Signals whether the screen is currently pressed or not
      */
     boolean isPressed = false;
-    float width = 3000, height = 500;
+    float width = 500, height = 500;
 
 
     public HomeController() {
@@ -50,7 +50,7 @@ public class HomeController implements Screen, InputProcessor {
 
         initListeners();
 
-        this.luidetest = new Testlui(0.0f, 0.0f, 100, 100);
+        this.luidetest = new Testlui(0.0f, 400f, 30, 30);
         this.stage.addActor(luidetest);
         lineContainer.add(new ArrayList<Vector2>());
     }

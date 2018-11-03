@@ -11,7 +11,7 @@ public class Model {
     public static PropertyChangeSupport screenPCS = new PropertyChangeSupport();
     public static Screen screen;
     public static Skin skin;
-    public static int speed = 10;
+    public static int xspeed = 0, yspeed = 2;
 
     private Model() {
     }
