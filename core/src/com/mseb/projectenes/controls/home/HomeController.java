@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mseb.projectenes.model.Model;
@@ -20,11 +21,11 @@ import java.util.ArrayList;
 
 public class HomeController implements Screen, InputProcessor {
     Stage stage;
-    OrthographicCamera camera;
     InputMultiplexer inputMultiplexer;
     ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     Testlui luidetest;
+    Viewport screenViewport;
     /**
      * Signals which lines touchpoints are currently added to
      */
@@ -38,11 +39,8 @@ public class HomeController implements Screen, InputProcessor {
 
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
-        camera = new OrthographicCamera(500, height);
-        camera.position.set(0, 0, 0);
-        camera.update();
 
-        Viewport screenViewport = new StretchViewport(width, height, camera);
+        screenViewport = new ExtendViewport(width, height);
         stage = new Stage(screenViewport);
 
         inputMultiplexer.addProcessor(this);
@@ -80,8 +78,19 @@ public class HomeController implements Screen, InputProcessor {
 
         drawLines();
 
-        camera.position.x += Model.speed;
+        speedAdjust();
+
     }
+
+
+    public void speedAdjust(){
+        for (ArrayList<Vector2> line: lineContainer){
+            for(Vector2 point: line){
+                point.x -= Model.speed;
+            }
+        }
+    }
+
 
     /**
      * Calculates camera-coordinates to world-coordinates
@@ -91,7 +100,7 @@ public class HomeController implements Screen, InputProcessor {
      * @return A 2D Vector of the now unprojected coordinates x and y
      */
     private Vector2 getUnprojectedPoint(float x, float y) {
-        Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
+        Vector3 coordinates3D = screenViewport.getCamera().unproject(new Vector3(x, y, 0));
         return new Vector2(coordinates3D.x, coordinates3D.y);
     }
 
@@ -111,7 +120,7 @@ public class HomeController implements Screen, InputProcessor {
     private void drawLines() {
         for (int h = 0; h < lineContainer.size(); h++) {
             for (int i = 0; i < lineContainer.get(h).size() - 1; i++) {
-                shapeRenderer.setProjectionMatrix(camera.combined);
+                shapeRenderer.setProjectionMatrix(screenViewport.getCamera().combined);
                 shapeRenderer.setColor(Color.BLACK);
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 shapeRenderer.line(lineContainer.get(h).get(i), lineContainer.get(h).get(i + 1));
@@ -119,6 +128,8 @@ public class HomeController implements Screen, InputProcessor {
             }
         }
     }
+
+
 
     @Override
     public void resize(int width, int height) {

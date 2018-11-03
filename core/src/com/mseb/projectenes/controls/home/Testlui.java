@@ -16,7 +16,7 @@ public class Testlui extends Actor {
 
 
     public Testlui (float xpos, float ypos, float width, float height){
-        image = new Texture(Gdx.files.internal("badlogic.jpg"));
+        image = new Texture(Gdx.files.internal("ball.png"));
         setX(xpos);
         setY(ypos);
         hitbox = new Circle(xpos, ypos, width*2);
