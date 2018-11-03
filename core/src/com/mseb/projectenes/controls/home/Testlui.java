@@ -16,15 +16,15 @@ import static com.badlogic.gdx.math.Intersector.intersectSegmentCircle;
 
 public class Testlui extends Actor {
     private Texture image;
-    private Circle hitbox;
+    public Circle hitbox;
     private float width, height;
 
 
-    public Testlui (float xpos, float ypos, float width, float height){
+    public Testlui(float xpos, float ypos, float width, float height) {
         image = new Texture(Gdx.files.internal("ball.png"));
         setX(xpos);
         setY(ypos);
-        hitbox = new Circle(xpos, ypos, width/2);
+        hitbox = new Circle(xpos + width / 2, ypos + height / 2, width / 2);
 
         setWidth(width);
         setHeight(height);
@@ -32,7 +32,7 @@ public class Testlui extends Actor {
         this.width = width;
         this.height = height;
 
-        this.addListener(new ClickListener(){
+        this.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("test");
@@ -41,24 +41,24 @@ public class Testlui extends Actor {
     }
 
     @Override
-    public void act(float delta){
+    public void act(float delta) {
 
-        if (iscolliding()){
+        if (iscolliding()) {
 
         } else {
-            setY(getY()-Model.yspeed);
-            hitbox.x = getX();
-            hitbox.y = getY();
+            setY(getY() - Model.yspeed);
+            hitbox.x = getX() + getWidth() / 2;
+            hitbox.y = getY() + getHeight() / 2;
 
         }
 
     }
 
 
-    private boolean iscolliding(){
+    private boolean iscolliding() {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
-                if (intersectSegmentCircle(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(getY(), getY()), hitbox.radius)){
+                if (intersectSegmentCircle(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(getX(), getY()), hitbox.radius)) {
                     return true;
                 }
             }

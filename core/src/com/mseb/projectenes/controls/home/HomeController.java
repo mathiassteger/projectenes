@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class HomeController implements Screen, InputProcessor {
     Stage stage;
     InputMultiplexer inputMultiplexer;
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
+    ShapeRenderer shapeRenderer;
     Testlui luidetest;
     Viewport screenViewport;
     /**
@@ -38,6 +38,8 @@ public class HomeController implements Screen, InputProcessor {
 
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
+        shapeRenderer = new ShapeRenderer();
+
 
         screenViewport = new ExtendViewport(width, height);
         stage = new Stage(screenViewport);
@@ -46,12 +48,15 @@ public class HomeController implements Screen, InputProcessor {
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-
+        shapeRenderer.setProjectionMatrix(screenViewport.getCamera().combined);
+        shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
         this.luidetest = new Testlui(0.0f, 400f, 30, 30);
         this.stage.addActor(luidetest);
         Model.lineContainer.add(new ArrayList<Vector2>());
+//        Model.lineContainer.get(0).add(new Vector2(0, 300));
+//        Model.lineContainer.get(0).add(new Vector2(200, 300));
     }
 
     private void initListeners() {
@@ -82,10 +87,10 @@ public class HomeController implements Screen, InputProcessor {
     }
 
 
-    public void speedAdjust(){
-        for (ArrayList<Vector2> line: Model.lineContainer){
-            for(Vector2 point: line){
-                point.x -= Model.yspeed;
+    public void speedAdjust() {
+        for (ArrayList<Vector2> line : Model.lineContainer) {
+            for (Vector2 point : line) {
+                point.x -= Model.xspeed;
             }
         }
     }
@@ -117,17 +122,19 @@ public class HomeController implements Screen, InputProcessor {
      * Every point from one list in {@link Model#lineContainer} is connected to the next of the same list.
      */
     private void drawLines() {
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(luidetest.hitbox.x, luidetest.hitbox.y, luidetest.hitbox.radius);
+        shapeRenderer.end();
+
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
-                shapeRenderer.setProjectionMatrix(screenViewport.getCamera().combined);
-                shapeRenderer.setColor(Color.BLACK);
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 shapeRenderer.line(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1));
                 shapeRenderer.end();
             }
         }
     }
-
 
 
     @Override

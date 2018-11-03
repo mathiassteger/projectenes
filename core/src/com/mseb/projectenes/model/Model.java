@@ -14,7 +14,7 @@ public class Model {
     public static PropertyChangeSupport screenPCS = new PropertyChangeSupport();
     public static Screen screen;
     public static Skin skin;
-    public static int xspeed = 0, yspeed = 2;
+    public static float xspeed = .2f, yspeed = 1f;
     public static volatile ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
 
 
