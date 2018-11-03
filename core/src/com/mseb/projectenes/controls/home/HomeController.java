@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class HomeController implements Screen, InputProcessor {
     Stage stage;
     InputMultiplexer inputMultiplexer;
-    ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     Testlui luidetest;
     Viewport screenViewport;
@@ -52,7 +51,7 @@ public class HomeController implements Screen, InputProcessor {
 
         this.luidetest = new Testlui(0.0f, 400f, 30, 30);
         this.stage.addActor(luidetest);
-        lineContainer.add(new ArrayList<Vector2>());
+        Model.lineContainer.add(new ArrayList<Vector2>());
     }
 
     private void initListeners() {
@@ -84,9 +83,9 @@ public class HomeController implements Screen, InputProcessor {
 
 
     public void speedAdjust(){
-        for (ArrayList<Vector2> line: lineContainer){
+        for (ArrayList<Vector2> line: Model.lineContainer){
             for(Vector2 point: line){
-                point.x -= Model.speed;
+                point.x -= Model.yspeed;
             }
         }
     }
@@ -105,25 +104,25 @@ public class HomeController implements Screen, InputProcessor {
     }
 
     /**
-     * Adds a touchpoint to the list with the number {@link HomeController#lineCounter} to touchpoints {@link HomeController#lineContainer}
+     * Adds a touchpoint to the list with the number {@link HomeController#lineCounter} to touchpoints {@link Model#lineContainer}
      */
     private void checkForAndAddTouchPoint() {
         if (isPressed) {
-            this.lineContainer.get(lineCounter).add(getUnprojectedPoint(Gdx.input.getX(), Gdx.input.getY()));
+            Model.lineContainer.get(lineCounter).add(getUnprojectedPoint(Gdx.input.getX(), Gdx.input.getY()));
         }
     }
 
     /**
-     * Draws lines according to lines formed from the list of touchpoints {@link HomeController#lineContainer}.
-     * Every point from one list in {@link HomeController#lineContainer} is connected to the next of the same list.
+     * Draws lines according to lines formed from the list of touchpoints {@link Model#lineContainer}.
+     * Every point from one list in {@link Model#lineContainer} is connected to the next of the same list.
      */
     private void drawLines() {
-        for (int h = 0; h < lineContainer.size(); h++) {
-            for (int i = 0; i < lineContainer.get(h).size() - 1; i++) {
+        for (int h = 0; h < Model.lineContainer.size(); h++) {
+            for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
                 shapeRenderer.setProjectionMatrix(screenViewport.getCamera().combined);
                 shapeRenderer.setColor(Color.BLACK);
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                shapeRenderer.line(lineContainer.get(h).get(i), lineContainer.get(h).get(i + 1));
+                shapeRenderer.line(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1));
                 shapeRenderer.end();
             }
         }
@@ -175,7 +174,7 @@ public class HomeController implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         this.isPressed = false;
-        this.lineContainer.add(new ArrayList<Vector2>());
+        Model.lineContainer.add(new ArrayList<Vector2>());
         this.lineCounter++;
         return false;
     }

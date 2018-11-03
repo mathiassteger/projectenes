@@ -2,9 +2,12 @@ package com.mseb.projectenes.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mseb.projectenes.controls.home.HomeController;
 import com.mseb.projectenes.utilities.propertychanges.PropertyChangeSupport;
+
+import java.util.ArrayList;
 
 public class Model {
     private static final Model INSTANCE = new Model();
@@ -12,6 +15,8 @@ public class Model {
     public static Screen screen;
     public static Skin skin;
     public static int xspeed = 0, yspeed = 2;
+    public static volatile ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
+
 
     private Model() {
     }
