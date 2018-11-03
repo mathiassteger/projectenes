@@ -46,14 +46,13 @@ public class Testlui extends Actor {
     public void act(float delta) {
 
         if (iscolliding()) {
-            Model.yspeed *= -0.9;
-            //ycceleration *= -1;
+            Model.yspeed *= -0.9; /** Damit es so wirkt als wäre es ein inelastischer Stoß */
 
-            setY(getY() - Model.yspeed);
+            setY(getY() - Model.yspeed); /** Damit der ball wieder weg bounced */
             hitbox.x = getX() + getWidth() / 2;
             hitbox.y = getY() + getHeight() / 2;
 
-            Model.xspeed -= xcceleration;
+            Model.xspeed -= xcceleration; /** war ein lustiges feedback für wenn man den ball "rollen lässt" */
 
 
         } else {
