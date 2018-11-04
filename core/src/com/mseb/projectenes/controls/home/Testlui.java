@@ -14,6 +14,7 @@ import com.mseb.projectenes.model.Model;
 
 import static com.badlogic.gdx.math.Intersector.intersectSegmentCircle;
 import static com.mseb.projectenes.model.Model.xcceleration;
+import static com.mseb.projectenes.model.Model.xspeed;
 import static com.mseb.projectenes.model.Model.ycceleration;
 
 public class Testlui extends Actor {
@@ -46,13 +47,15 @@ public class Testlui extends Actor {
     public void act(float delta) {
 
         if (iscolliding()) {
-            Model.yspeed *= -0.9; /** Damit es so wirkt als wäre es ein inelastischer Stoß */
+            Model.yspeed *= -0.9;                                                                               /** Damit es so wirkt als wäre es ein inelastischer Stoß */
 
-            setY(getY() - Model.yspeed); /** Damit der ball wieder weg bounced */
+
+            setY(getY() - (Math.abs(Model.yspeed)+ Model.xspeed + Model.addy) * (Model.yspeed / Math.abs(Model.yspeed)));     /** Ballposition für ersten bounce moment anpassen */
+
             hitbox.x = getX() + getWidth() / 2;
             hitbox.y = getY() + getHeight() / 2;
 
-            Model.xspeed -= xcceleration; /** war ein lustiges feedback für wenn man den ball "rollen lässt" */
+            //Model.xspeed -= xcceleration;                                                                       /** war ein lustiges feedback für wenn man den ball "rollen lässt" */
 
 
         } else {
@@ -72,12 +75,17 @@ public class Testlui extends Actor {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
                 if (intersectSegmentCircle(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(hitbox.x, hitbox.y), hitbox.radius*hitbox.radius)) {
+
+                    /** Mein versuch den ball so zu verschieben, dass die nächste Linie nicht durch den ball geht.  */
+                    Model.addy = Model.lineContainer.get(h).get(i + 1).y - Model.lineContainer.get(h).get(i).y;
+
                     return true;
                 }
             }
         }
         return false;
     }
+
 
 
     @Override
