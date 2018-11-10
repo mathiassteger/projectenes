@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
@@ -19,16 +20,20 @@ import static com.mseb.projectenes.model.Model.xspeed;
 import static com.mseb.projectenes.model.Model.ycceleration;
 
 public class Testlui extends Actor {
-    private Texture image;
+    private Sprite image;
+    private float imageAngle = 0;
     public Circle hitbox;
     private float width, height;
     private Vector2 displacement = new Vector2();
 
 
     public Testlui(float xpos, float ypos, float width, float height) {
-        image = new Texture(Gdx.files.internal("ball.png"));
+        image = new Sprite(new Texture(Gdx.files.internal("ball.png")));
+        image.setSize(width, height);
+        image.setOriginCenter();
         setX(xpos);
         setY(ypos);
+        image.setPosition(xpos, ypos);
         hitbox = new Circle(xpos + width / 2, ypos + height / 2, width / 2);
 
         setWidth(width);
@@ -58,7 +63,7 @@ public class Testlui extends Actor {
 
             hitbox.x = getX() + getWidth() / 2;
             hitbox.y = getY() + getHeight() / 2;
-
+            image.setPosition(getX(), getY());
             //Model.xspeed -= xcceleration;                                                                       /** war ein lustiges feedback für wenn man den ball "rollen lässt" */
 
 
@@ -69,9 +74,8 @@ public class Testlui extends Actor {
 
             Model.yspeed += ycceleration;
             Model.xspeed += xcceleration;
-
+            image.setPosition(getX(), getY());
         }
-
     }
 
 
@@ -94,10 +98,10 @@ public class Testlui extends Actor {
     }
 
 
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(image, this.getX(), this.getY(), width, height);
-
+        image.setRotation(imageAngle);
+        imageAngle -= Model.xspeed;
+        image.draw(batch);
     }
 }
