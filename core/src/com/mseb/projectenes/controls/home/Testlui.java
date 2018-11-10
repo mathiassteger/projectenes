@@ -49,10 +49,12 @@ public class Testlui extends Actor {
     public void act(float delta) {
 
         if (iscolliding()) {
-            Model.yspeed *= -0.9;                                                                               /** Damit es so wirkt als wäre es ein inelastischer Stoß */
 
 
-            setY(getY() - (Math.abs(Model.yspeed)+ Model.xspeed + Model.addy) * (Model.yspeed / Math.abs(Model.yspeed)));     /** Ballposition für ersten bounce moment anpassen */
+            Model.yspeed *= -0.9*Math.signum(displacement.y);                                       /** Damit es so wirkt als wäre es ein inelastischer Stoß */
+
+
+            setY(getY() - (Math.abs(Model.yspeed)+ Model.xspeed + Model.addy / 2) * (Model.yspeed / Math.abs(Model.yspeed)));     /** Ballposition für ersten bounce moment anpassen */
 
             hitbox.x = getX() + getWidth() / 2;
             hitbox.y = getY() + getHeight() / 2;
@@ -76,9 +78,11 @@ public class Testlui extends Actor {
     private boolean iscolliding() {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
-                float dispstrength = intersectSegmentCircleDisplace(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(hitbox.x, hitbox.y), hitbox.radius*hitbox.radius, displacement);
-                if (dispstrength != Float.POSITIVE_INFINITY) {
+                float dispstrength = intersectSegmentCircleDisplace(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(hitbox.x, hitbox.y), hitbox.radius, displacement);
 
+
+                if (dispstrength < Float.POSITIVE_INFINITY) {
+                    System.out.println(this.displacement.angle());
                     /** Mein versuch den ball so zu verschieben, dass die nächste Linie nicht durch den ball geht.  */
                     Model.addy = Model.lineContainer.get(h).get(i + 1).y - Model.lineContainer.get(h).get(i).y;
 
