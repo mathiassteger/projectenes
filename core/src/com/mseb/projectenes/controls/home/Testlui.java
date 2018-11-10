@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mseb.projectenes.model.Model;
 
 import static com.badlogic.gdx.math.Intersector.intersectSegmentCircle;
+import static com.badlogic.gdx.math.Intersector.intersectSegmentCircleDisplace;
 import static com.mseb.projectenes.model.Model.xcceleration;
 import static com.mseb.projectenes.model.Model.xspeed;
 import static com.mseb.projectenes.model.Model.ycceleration;
@@ -21,6 +22,7 @@ public class Testlui extends Actor {
     private Texture image;
     public Circle hitbox;
     private float width, height;
+    private Vector2 displacement = new Vector2();
 
 
     public Testlui(float xpos, float ypos, float width, float height) {
@@ -74,7 +76,8 @@ public class Testlui extends Actor {
     private boolean iscolliding() {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
-                if (intersectSegmentCircle(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(hitbox.x, hitbox.y), hitbox.radius*hitbox.radius)) {
+                float dispstrength = intersectSegmentCircleDisplace(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1), new Vector2(hitbox.x, hitbox.y), hitbox.radius*hitbox.radius, displacement);
+                if (dispstrength != Float.POSITIVE_INFINITY) {
 
                     /** Mein versuch den ball so zu verschieben, dass die nächste Linie nicht durch den ball geht.  */
                     Model.addy = Model.lineContainer.get(h).get(i + 1).y - Model.lineContainer.get(h).get(i).y;
