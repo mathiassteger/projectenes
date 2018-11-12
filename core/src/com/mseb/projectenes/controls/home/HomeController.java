@@ -1,6 +1,7 @@
 package com.mseb.projectenes.controls.home;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -27,6 +28,7 @@ public class HomeController implements Screen, InputProcessor {
     private Stage stage;
     private InputMultiplexer inputMultiplexer;
     private ShapeRenderer shapeRenderer;
+    // LUIDETEST MUSS EIGENTLICH AUS DIESER KLASSE RAUS...
     private Testlui luidetest;
     private Viewport screenViewport;
     private Box2DDebugRenderer b2dr;

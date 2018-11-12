@@ -1,6 +1,7 @@
 package com.mseb.projectenes.controls.home;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,7 +17,7 @@ import com.mseb.projectenes.model.Model;
 public class Testlui extends Actor {
     private Sprite image;
     private float imageAngle = 0;
-    private Body body;
+    public Body body;
     private float width, height;
 
 
@@ -59,8 +60,27 @@ public class Testlui extends Actor {
         return pBody;
     }
 
+    public void inputUpdate(float delta) {
+        float horizontalForce = 0;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            horizontalForce -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            horizontalForce += 1;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            System.out.println("up");
+            body.applyForceToCenter(0, 3000, false);
+        }
+
+        body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
+    }
+
     @Override
     public void act(float delta) {
+        inputUpdate(delta);
         float xpos = body.getPosition().x - width / 2;
         float ypos = body.getPosition().y - height / 2;
         setPosition(xpos, ypos);
@@ -70,7 +90,7 @@ public class Testlui extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         image.setRotation(imageAngle);
-        imageAngle -= body.getLinearVelocity().x/10;
+        imageAngle -= body.getLinearVelocity().x / 10;
         image.draw(batch);
     }
 }
