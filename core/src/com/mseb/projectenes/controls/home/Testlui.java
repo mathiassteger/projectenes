@@ -54,7 +54,7 @@ public class Testlui extends Actor {
 
         CircleShape shape = new CircleShape();
         shape.setRadius(radius);
-        pBody.createFixture(shape, 200f);
+        pBody.createFixture(shape, 1f);
         shape.dispose();
         return pBody;
     }
@@ -69,6 +69,8 @@ public class Testlui extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        image.setRotation(imageAngle);
+        imageAngle -= body.getLinearVelocity().x/10;
         image.draw(batch);
     }
 }

@@ -58,7 +58,7 @@ public class HomeController implements Screen, InputProcessor {
         shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
-        Model.world = new World(new Vector2(0, -9.8f), false);
+        Model.world = new World(new Vector2(0, -200f), false);
         b2dr = new Box2DDebugRenderer();
 
         this.luidetest = new Testlui(0.0f, 400f, 30, 30);
