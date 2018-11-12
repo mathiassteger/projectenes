@@ -6,13 +6,17 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mseb.projectenes.model.Model;
 
@@ -20,20 +24,22 @@ import java.util.ArrayList;
 
 
 public class HomeController implements Screen, InputProcessor {
-    Stage stage;
-    InputMultiplexer inputMultiplexer;
-    ShapeRenderer shapeRenderer;
-    Testlui luidetest;
-    Viewport screenViewport;
+    private Stage stage;
+    private InputMultiplexer inputMultiplexer;
+    private ShapeRenderer shapeRenderer;
+    private Testlui luidetest;
+    private Viewport screenViewport;
+    private Box2DDebugRenderer b2dr;
+
     /**
      * Signals which lines touchpoints are currently added to
      */
-    int lineCounter = 0;
+    private int lineCounter = 0;
     /**
      * Signals whether the screen is currently pressed or not
      */
-    boolean isPressed = false;
-    float width = 500, height = 500;
+    private boolean isPressed = false;
+    private float width = 500, height = 500;
 
 
     public HomeController() {
@@ -52,11 +58,32 @@ public class HomeController implements Screen, InputProcessor {
         shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
+        Model.world = new World(new Vector2(0, -9.8f), false);
+        b2dr = new Box2DDebugRenderer();
+
         this.luidetest = new Testlui(0.0f, 400f, 30, 30);
         this.stage.addActor(luidetest);
-        Model.lineContainer.add(new ArrayList<Vector2>());
+        createLine(new Vector2(0, 300), new Vector2(200, 200));
+        createLine(new Vector2(200, 200), new Vector2(400, 200));
+
+//        Model.lineContainer.add(new ArrayList<Vector2>());
 //        Model.lineContainer.get(0).add(new Vector2(0, 300));
 //        Model.lineContainer.get(0).add(new Vector2(200, 300));
+    }
+
+    private void createLine(Vector2 v1, Vector2 v2) {
+        Body pBody;
+        BodyDef def = new BodyDef();
+
+        def.type = BodyDef.BodyType.StaticBody;
+        def.fixedRotation = true;
+
+        pBody = Model.world.createBody(def);
+
+        EdgeShape shape = new EdgeShape();
+        shape.set(v1, v2);
+        pBody.createFixture(shape, 1.0f);
+        shape.dispose();
     }
 
     private void initListeners() {
@@ -70,6 +97,7 @@ public class HomeController implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
+        update();
         Gdx.gl.glClearColor(127, 127, 127, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -82,19 +110,13 @@ public class HomeController implements Screen, InputProcessor {
 
         drawLines();
 
-        speedAdjust();
+        b2dr.render(Model.world, screenViewport.getCamera().combined);
 
     }
 
-
-    public void speedAdjust() {
-        for (ArrayList<Vector2> line : Model.lineContainer) {
-            for (Vector2 point : line) {
-                point.x -= Model.xspeed;
-            }
-        }
+    private void update() {
+        Model.world.step(1 / 60f, 6, 2);
     }
-
 
     /**
      * Calculates camera-coordinates to world-coordinates
@@ -122,11 +144,6 @@ public class HomeController implements Screen, InputProcessor {
      * Every point from one list in {@link Model#lineContainer} is connected to the next of the same list.
      */
     private void drawLines() {
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.circle(luidetest.hitbox.x, luidetest.hitbox.y, luidetest.hitbox.radius);
-        shapeRenderer.end();
-
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

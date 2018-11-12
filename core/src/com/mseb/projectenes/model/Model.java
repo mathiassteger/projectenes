@@ -3,6 +3,7 @@ package com.mseb.projectenes.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mseb.projectenes.controls.home.HomeController;
 import com.mseb.projectenes.utilities.propertychanges.PropertyChangeSupport;
@@ -14,12 +15,8 @@ public class Model {
     public static PropertyChangeSupport screenPCS = new PropertyChangeSupport();
     public static Screen screen;
     public static Skin skin;
-    public static float xcceleration = 0.002f, ycceleration = 0.01f;
-    public static float xspeed, yspeed;
-    public static float defxspeed = .2f, defyspeed = 1f;
-    public static float addx, addy;
     public static volatile ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
-
+    public static World world;
 
     private Model() {
     }
@@ -35,7 +32,6 @@ public class Model {
 
     public void setScreen(Screen screen) {
         this.screen = screen;
-        screenPCS.firePropertyChange(null, this.screen);
-
+        screenPCS.firePropertyChange(null, screen);
     }
 }
