@@ -26,14 +26,14 @@ public class Testlui extends Actor {
 
     public Testlui(float xpos, float ypos, float radius) {
         image = new Sprite(new Texture(Gdx.files.internal("ball.png")));
-        image.setOriginCenter();
+
         this.radius = radius;
 
         body = createBody(xpos, ypos, radius);
         image.setPosition(body.getPosition().x * PPM - radius, body.getPosition().y * PPM - radius);
-        this.setPosition(body.getPosition().x * PPM, body.getPosition().y * PPM);
+        this.setPosition(body.getPosition().x * PPM - radius, body.getPosition().y * PPM - radius);
         image.setSize(radius * 2, radius * 2);
-
+        this.setSize(radius * 2, radius * 2);
 
         this.addListener(new ClickListener() {
             @Override
@@ -69,7 +69,7 @@ public class Testlui extends Actor {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            body.applyForceToCenter(0, 100, false);
+            body.applyForceToCenter(0, 25, false);
         }
 
         body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
@@ -82,13 +82,14 @@ public class Testlui extends Actor {
         float ypos = (body.getPosition().y * PPM - radius);
         setPosition(xpos, ypos);
         image.setPosition(xpos, ypos);
+        image.setOriginCenter();
+        image.setRotation(imageAngle);
+        imageAngle -= body.getLinearVelocity().x / 2.5;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        image.setRotation(imageAngle);
-        imageAngle -= body.getLinearVelocity().x / 10;
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(camera.combined); // DO THIS HERE OR DIE
         image.draw(batch);
     }
 }

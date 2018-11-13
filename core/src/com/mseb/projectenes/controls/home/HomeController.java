@@ -49,7 +49,7 @@ public class HomeController implements Screen, InputProcessor {
     private boolean isPressed = false;
     float width = Gdx.graphics.getWidth();
     float height = Gdx.graphics.getHeight();
-    private float scale = 2f;
+    private float scale = 1f;
 
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
@@ -68,7 +68,7 @@ public class HomeController implements Screen, InputProcessor {
         shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
-        Model.world = new World(new Vector2(0, 0), false);
+        Model.world = new World(new Vector2(0, -9.81f), false);
         b2dr = new Box2DDebugRenderer();
 
         this.luidetest = new Testlui(0.0f, 400f, 15);
