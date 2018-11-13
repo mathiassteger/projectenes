@@ -7,6 +7,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -20,17 +23,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mseb.projectenes.model.Model;
+import com.mseb.projectenes.utilities.box2d.B2DConstants;
 
 import java.util.ArrayList;
+
+import static com.mseb.projectenes.utilities.box2d.B2DConstants.PPM;
 
 
 public class HomeController implements Screen, InputProcessor {
     private Stage stage;
     private InputMultiplexer inputMultiplexer;
     private ShapeRenderer shapeRenderer;
+    public static OrthographicCamera camera;
     // LUIDETEST MUSS EIGENTLICH AUS DIESER KLASSE RAUS...
     private Testlui luidetest;
-    private Viewport screenViewport;
     private Box2DDebugRenderer b2dr;
 
     /**
@@ -41,36 +47,43 @@ public class HomeController implements Screen, InputProcessor {
      * Signals whether the screen is currently pressed or not
      */
     private boolean isPressed = false;
-    private float width = 500, height = 500;
-
+    float width = Gdx.graphics.getWidth();
+    float height = Gdx.graphics.getHeight();
+    private float scale = 2f;
 
     public HomeController() {
         inputMultiplexer = new InputMultiplexer();
         shapeRenderer = new ShapeRenderer();
 
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, width / scale, height / scale);
 
-        screenViewport = new ExtendViewport(width, height);
-        stage = new Stage(screenViewport);
+        stage = new Stage();
 
         inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        shapeRenderer.setProjectionMatrix(screenViewport.getCamera().combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
-        Model.world = new World(new Vector2(0, -200f), false);
+        Model.world = new World(new Vector2(0, 0), false);
         b2dr = new Box2DDebugRenderer();
 
-        this.luidetest = new Testlui(0.0f, 400f, 30, 30);
+        this.luidetest = new Testlui(0.0f, 400f, 15);
         this.stage.addActor(luidetest);
-        createLine(new Vector2(0, 300), new Vector2(200, 200));
-        createLine(new Vector2(200, 200), new Vector2(400, 200));
+        createLine(new Vector2(0 / PPM, 300 / PPM), new Vector2(200 / PPM, 200 / PPM));
+        createLine(new Vector2(200 / PPM, 200 / PPM), new Vector2(400 / PPM, 200 / PPM));
+    }
 
-//        Model.lineContainer.add(new ArrayList<Vector2>());
-//        Model.lineContainer.get(0).add(new Vector2(0, 300));
-//        Model.lineContainer.get(0).add(new Vector2(200, 300));
+    public void cameraUpdate(float delta) {
+        Vector3 position = camera.position;
+        position.x = luidetest.body.getPosition().x * PPM;
+        position.y = luidetest.body.getPosition().y * PPM;
+        camera.position.set(position);
+
+        camera.update();
     }
 
     private void createLine(Vector2 v1, Vector2 v2) {
@@ -99,7 +112,7 @@ public class HomeController implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        update();
+        update(delta);
         Gdx.gl.glClearColor(127, 127, 127, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -112,12 +125,13 @@ public class HomeController implements Screen, InputProcessor {
 
         drawLines();
 
-        b2dr.render(Model.world, screenViewport.getCamera().combined);
+        b2dr.render(Model.world, camera.combined.scl(PPM));
 
     }
 
-    private void update() {
+    private void update(float delta) {
         Model.world.step(1 / 60f, 6, 2);
+        cameraUpdate(delta);
     }
 
     /**
@@ -128,7 +142,7 @@ public class HomeController implements Screen, InputProcessor {
      * @return A 2D Vector of the now unprojected coordinates x and y
      */
     private Vector2 getUnprojectedPoint(float x, float y) {
-        Vector3 coordinates3D = screenViewport.getCamera().unproject(new Vector3(x, y, 0));
+        Vector3 coordinates3D = camera.unproject(new Vector3(x, y, 0));
         return new Vector2(coordinates3D.x, coordinates3D.y);
     }
 

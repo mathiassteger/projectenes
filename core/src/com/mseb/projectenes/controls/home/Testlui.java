@@ -12,28 +12,28 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mseb.projectenes.model.Model;
+import com.mseb.projectenes.utilities.box2d.B2DConstants;
+
+import static com.mseb.projectenes.controls.home.HomeController.camera;
+import static com.mseb.projectenes.utilities.box2d.B2DConstants.PPM;
 
 
 public class Testlui extends Actor {
     private Sprite image;
     private float imageAngle = 0;
     public Body body;
-    private float width, height;
+    public float radius;
 
-
-    public Testlui(float xpos, float ypos, float width, float height) {
+    public Testlui(float xpos, float ypos, float radius) {
         image = new Sprite(new Texture(Gdx.files.internal("ball.png")));
-        image.setSize(width, height);
         image.setOriginCenter();
-        setX(xpos);
-        setY(ypos);
-        image.setPosition(xpos, ypos);
-        body = createBody(xpos + width / 2, ypos + height / 2, width / 2);
-        setWidth(width);
-        setHeight(height);
+        this.radius = radius;
 
-        this.width = width;
-        this.height = height;
+        body = createBody(xpos, ypos, radius);
+        image.setPosition(body.getPosition().x * PPM - radius, body.getPosition().y * PPM - radius);
+        this.setPosition(body.getPosition().x * PPM, body.getPosition().y * PPM);
+        image.setSize(radius * 2, radius * 2);
+
 
         this.addListener(new ClickListener() {
             @Override
@@ -46,15 +46,13 @@ public class Testlui extends Actor {
     private Body createBody(float xpos, float ypos, float radius) {
         Body pBody;
         BodyDef def = new BodyDef();
-
         def.type = BodyDef.BodyType.DynamicBody;
-
-        def.position.set(xpos, ypos);
+        def.position.set(xpos / PPM, ypos / PPM);
         def.fixedRotation = true;
         pBody = Model.world.createBody(def);
 
         CircleShape shape = new CircleShape();
-        shape.setRadius(radius);
+        shape.setRadius(radius / PPM);
         pBody.createFixture(shape, 1f);
         shape.dispose();
         return pBody;
@@ -64,15 +62,14 @@ public class Testlui extends Actor {
         float horizontalForce = 0;
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            horizontalForce -= 1;
+            horizontalForce -= .1f;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            horizontalForce += 1;
+            horizontalForce += .1f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            System.out.println("up");
-            body.applyForceToCenter(0, 3000, false);
+            body.applyForceToCenter(0, 100, false);
         }
 
         body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
@@ -81,8 +78,8 @@ public class Testlui extends Actor {
     @Override
     public void act(float delta) {
         inputUpdate(delta);
-        float xpos = body.getPosition().x - width / 2;
-        float ypos = body.getPosition().y - height / 2;
+        float xpos = (body.getPosition().x * PPM - radius);
+        float ypos = (body.getPosition().y * PPM - radius);
         setPosition(xpos, ypos);
         image.setPosition(xpos, ypos);
     }
@@ -91,6 +88,7 @@ public class Testlui extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         image.setRotation(imageAngle);
         imageAngle -= body.getLinearVelocity().x / 10;
+        batch.setProjectionMatrix(camera.combined);
         image.draw(batch);
     }
 }
