@@ -155,8 +155,10 @@ public class HomeController implements Screen, InputProcessor {
             ArrayList<Vector2> currentLine = Model.lineContainer.get(lineCounter);
             currentLine.add(getUnprojectedPoint(Gdx.input.getX(), Gdx.input.getY()));
 
-            if (currentLine.size() > 1){
-                createLine(currentLine.get(0), currentLine.get(1));
+            if (currentLine.size() > 1) {
+                Vector2 v1 = currentLine.get(0);
+                Vector2 v2 = currentLine.get(1);
+                createLine(new Vector2(v1.x / PPM, v1.y / PPM), new Vector2(v2.x / PPM, v2.y / PPM));
                 currentLine.remove(0);
             }
         }
