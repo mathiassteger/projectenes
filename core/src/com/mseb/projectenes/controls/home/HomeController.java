@@ -151,7 +151,13 @@ public class HomeController implements Screen, InputProcessor {
      */
     private void checkForAndAddTouchPoint() {
         if (isPressed) {
-            Model.lineContainer.get(lineCounter).add(getUnprojectedPoint(Gdx.input.getX(), Gdx.input.getY()));
+            ArrayList<Vector2> currentLine = Model.lineContainer.get(lineCounter);
+            currentLine.add(getUnprojectedPoint(Gdx.input.getX(), Gdx.input.getY()));
+
+            if (currentLine.size() > 1){
+                createLine(currentLine.get(0), currentLine.get(1));
+                currentLine.remove(0);
+            }
         }
     }
 
