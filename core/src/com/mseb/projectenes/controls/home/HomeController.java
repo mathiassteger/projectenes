@@ -73,6 +73,7 @@ public class HomeController implements Screen, InputProcessor {
 
         this.luidetest = new Testlui(0.0f, 400f, 15);
         this.stage.addActor(luidetest);
+        Model.lineContainer.add(new ArrayList<Vector2>());
         createLine(new Vector2(0 / PPM, 300 / PPM), new Vector2(200 / PPM, 200 / PPM));
         createLine(new Vector2(200 / PPM, 200 / PPM), new Vector2(400 / PPM, 200 / PPM));
     }
