@@ -74,14 +74,16 @@ public class HomeController implements Screen, InputProcessor {
         this.luidetest = new Testlui(0.0f, 400f, 15);
         this.stage.addActor(luidetest);
         Model.lineContainer.add(new ArrayList<Vector2>());
-        createLine(new Vector2(0 / PPM, 300 / PPM), new Vector2(200 / PPM, 200 / PPM));
-        createLine(new Vector2(200 / PPM, 200 / PPM), new Vector2(400 / PPM, 200 / PPM));
+        createLine(new Vector2((camera.position.x - (camera.viewportWidth/2)) / PPM, (camera.position.y - camera.viewportHeight/2) / PPM),
+                new Vector2((camera.position.x + (camera.viewportWidth/2)) / PPM, (camera.position.y - camera.viewportHeight/2) / PPM));
+        createLine(new Vector2((camera.position.x - (camera.viewportWidth/2)) / PPM, (camera.position.y + (camera.viewportHeight / 2)) / PPM),
+                new Vector2((camera.position.x + (camera.viewportWidth/2)) / PPM, (camera.position.y + camera.viewportHeight/2) / PPM));
     }
 
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
         position.x = luidetest.body.getPosition().x * PPM;
-        position.y = luidetest.body.getPosition().y * PPM;
+        //position.y = luidetest.body.getPosition().y * PPM;
         camera.position.set(position);
 
         camera.update();
@@ -91,7 +93,7 @@ public class HomeController implements Screen, InputProcessor {
         Body pBody;
         BodyDef def = new BodyDef();
 
-        def.type = BodyDef.BodyType.StaticBody;
+        def.type = BodyDef.BodyType.KinematicBody;
         def.fixedRotation = true;
 
         pBody = Model.world.createBody(def);

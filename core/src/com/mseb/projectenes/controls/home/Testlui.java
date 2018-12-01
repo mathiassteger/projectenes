@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -46,31 +47,44 @@ public class Testlui extends Actor {
     private Body createBody(float xpos, float ypos, float radius) {
         Body pBody;
         BodyDef def = new BodyDef();
+
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(xpos / PPM, ypos / PPM);
+
         def.fixedRotation = true;
+        def.bullet = true;
+        def.angularDamping = 0.9f;
+        def.linearDamping = 0.9f;
+
+        CircleShape circle = new CircleShape();
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+        fixtureDef.shape = circle;
+
         pBody = Model.world.createBody(def);
 
-        CircleShape shape = new CircleShape();
-        shape.setRadius(radius / PPM);
-        pBody.createFixture(shape, 1f);
-        shape.dispose();
+        circle.setRadius(radius / PPM);
+        pBody.createFixture(fixtureDef);
+        circle.dispose();
         return pBody;
     }
 
     public void inputUpdate(float delta) {
         float horizontalForce = 0;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            horizontalForce -= .1f;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        //if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        horizontalForce += .001f;
+        //}
+        /*if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             horizontalForce += .1f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             body.applyForceToCenter(0, 25, false);
-        }
+        }*/
 
         body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
     }
