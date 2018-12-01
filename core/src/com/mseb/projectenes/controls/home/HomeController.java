@@ -34,6 +34,7 @@ public class HomeController implements Screen, InputProcessor {
     private Stage stage;
     private InputMultiplexer inputMultiplexer;
     private ShapeRenderer shapeRenderer;
+    private Body roof, floor;
     public static OrthographicCamera camera;
     // LUIDETEST MUSS EIGENTLICH AUS DIESER KLASSE RAUS...
     private Testlui luidetest;
@@ -71,29 +72,28 @@ public class HomeController implements Screen, InputProcessor {
         Model.world = new World(new Vector2(0, -9.81f), false);
         b2dr = new Box2DDebugRenderer();
 
-        this.luidetest = new Testlui(0.0f, 400f, 15);
+        this.luidetest = new Testlui(20f, 1f, 15);
         this.stage.addActor(luidetest);
         Model.lineContainer.add(new ArrayList<Vector2>());
-        createLine(new Vector2((camera.position.x - (camera.viewportWidth/2)) / PPM, (camera.position.y - camera.viewportHeight/2) / PPM),
-                new Vector2((camera.position.x + (camera.viewportWidth/2)) / PPM, (camera.position.y - camera.viewportHeight/2) / PPM));
-        createLine(new Vector2((camera.position.x - (camera.viewportWidth/2)) / PPM, (camera.position.y + (camera.viewportHeight / 2)) / PPM),
-                new Vector2((camera.position.x + (camera.viewportWidth/2)) / PPM, (camera.position.y + camera.viewportHeight/2) / PPM));
+        floor = createDynamicLine(new Vector2(-2300 / PPM, 0 / PPM), new Vector2(2300 / PPM, 0 / PPM));
+        roof = createDynamicLine(new Vector2(-2300 / PPM, 500 / PPM), new Vector2(2300 / PPM, 500 / PPM));
+        luidetest.body.applyForceToCenter(new Vector2(50, 10), false);
     }
 
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
         position.x = luidetest.body.getPosition().x * PPM;
-        //position.y = luidetest.body.getPosition().y * PPM;
+        position.y = luidetest.body.getPosition().y * PPM;
         camera.position.set(position);
 
         camera.update();
     }
 
-    private void createLine(Vector2 v1, Vector2 v2) {
+    private Body createDynamicLine(Vector2 v1, Vector2 v2) {
         Body pBody;
         BodyDef def = new BodyDef();
 
-        def.type = BodyDef.BodyType.KinematicBody;
+        def.type = BodyDef.BodyType.DynamicBody;
         def.fixedRotation = true;
 
         pBody = Model.world.createBody(def);
@@ -102,6 +102,25 @@ public class HomeController implements Screen, InputProcessor {
         shape.set(v1, v2);
         pBody.createFixture(shape, 1.0f);
         shape.dispose();
+
+        return pBody;
+    }
+
+    private Body createStaticLine(Vector2 v1, Vector2 v2) {
+        Body pBody;
+        BodyDef def = new BodyDef();
+
+        def.type = BodyDef.BodyType.StaticBody;
+        def.fixedRotation = true;
+
+        pBody = Model.world.createBody(def);
+
+        EdgeShape shape = new EdgeShape();
+        shape.set(v1, v2);
+        pBody.createFixture(shape, 1.0f);
+        shape.dispose();
+
+        return pBody;
     }
 
     private void initListeners() {
@@ -135,6 +154,14 @@ public class HomeController implements Screen, InputProcessor {
     private void update(float delta) {
         Model.world.step(1 / 60f, 6, 2);
         cameraUpdate(delta);
+
+        Vector2 floorTarget = new Vector2(luidetest.body.getPosition().x, 0);
+        Vector2 floorVelocity = floorTarget.sub(floor.getPosition());
+        floor.setLinearVelocity(floorVelocity);
+
+        Vector2 roofTarget = new Vector2(luidetest.body.getPosition().x, 500 / PPM);
+        Vector2 roofVelocity = roofTarget.sub(roof.getPosition());
+        roof.setLinearVelocity(roofVelocity);
     }
 
     /**
@@ -160,7 +187,7 @@ public class HomeController implements Screen, InputProcessor {
             if (currentLine.size() > 1) {
                 Vector2 v1 = currentLine.get(0);
                 Vector2 v2 = currentLine.get(1);
-                createLine(new Vector2(v1.x / PPM, v1.y / PPM), new Vector2(v2.x / PPM, v2.y / PPM));
+                createStaticLine((new Vector2(v1.x / PPM, v1.y / PPM)), new Vector2(v2.x / PPM, v2.y / PPM));
                 currentLine.remove(0);
             }
         }
