@@ -75,16 +75,16 @@ public class Testlui extends Actor {
     public void inputUpdate(float delta) {
         float horizontalForce = 0;
 
-        //if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-        horizontalForce += .001f;
-        //}
-        /*if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            horizontalForce -= .1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             horizontalForce += .1f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             body.applyForceToCenter(0, 25, false);
-        }*/
+        }
 
         body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
     }

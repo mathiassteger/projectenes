@@ -1,15 +1,12 @@
 package com.mseb.projectenes.controls.home;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -17,13 +14,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mseb.projectenes.model.Model;
-import com.mseb.projectenes.utilities.box2d.B2DConstants;
 
 import java.util.ArrayList;
 
@@ -75,8 +68,8 @@ public class HomeController implements Screen, InputProcessor {
         this.luidetest = new Testlui(20f, 1f, 15);
         this.stage.addActor(luidetest);
         Model.lineContainer.add(new ArrayList<Vector2>());
-        floor = createDynamicLine(new Vector2(-2300 / PPM, 0 / PPM), new Vector2(2300 / PPM, 0 / PPM));
-        roof = createDynamicLine(new Vector2(-2300 / PPM, 500 / PPM), new Vector2(2300 / PPM, 500 / PPM));
+        floor = createKinematicLine(new Vector2(-2300 / PPM, 0 / PPM), new Vector2(2300 / PPM, 0 / PPM));
+        roof = createKinematicLine(new Vector2(-2300 / PPM, 500 / PPM), new Vector2(2300 / PPM, 500 / PPM));
         luidetest.body.applyForceToCenter(new Vector2(50, 10), false);
     }
 
@@ -89,11 +82,11 @@ public class HomeController implements Screen, InputProcessor {
         camera.update();
     }
 
-    private Body createDynamicLine(Vector2 v1, Vector2 v2) {
+    private Body createKinematicLine(Vector2 v1, Vector2 v2) {
         Body pBody;
         BodyDef def = new BodyDef();
 
-        def.type = BodyDef.BodyType.DynamicBody;
+        def.type = BodyDef.BodyType.KinematicBody;
         def.fixedRotation = true;
 
         pBody = Model.world.createBody(def);
@@ -155,13 +148,9 @@ public class HomeController implements Screen, InputProcessor {
         Model.world.step(1 / 60f, 6, 2);
         cameraUpdate(delta);
 
-        Vector2 floorTarget = new Vector2(luidetest.body.getPosition().x, 0);
-        Vector2 floorVelocity = floorTarget.sub(floor.getPosition());
-        floor.setLinearVelocity(floorVelocity);
 
-        Vector2 roofTarget = new Vector2(luidetest.body.getPosition().x, 500 / PPM);
-        Vector2 roofVelocity = roofTarget.sub(roof.getPosition());
-        roof.setLinearVelocity(roofVelocity);
+        floor.setLinearVelocity(luidetest.body.getLinearVelocity().x, 0);
+        roof.setLinearVelocity(luidetest.body.getLinearVelocity().x, 0);
     }
 
     /**
