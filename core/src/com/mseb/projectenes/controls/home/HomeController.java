@@ -62,7 +62,7 @@ public class HomeController implements Screen, InputProcessor {
         shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
-        Model.world = new World(new Vector2(0, -9.81f), false);
+        Model.world = new World(new Vector2(0, -3.81f), false);
         b2dr = new Box2DDebugRenderer();
 
         this.luidetest = new Testlui(20f, 1f, 15);
@@ -70,13 +70,13 @@ public class HomeController implements Screen, InputProcessor {
         Model.lineContainer.add(new ArrayList<Vector2>());
         floor = createKinematicLine(new Vector2(-2300 / PPM, 0 / PPM), new Vector2(2300 / PPM, 0 / PPM));
         roof = createKinematicLine(new Vector2(-2300 / PPM, 500 / PPM), new Vector2(2300 / PPM, 500 / PPM));
-        luidetest.body.applyForceToCenter(new Vector2(50, 10), false);
+        luidetest.body.applyForceToCenter(new Vector2(5000, 200), false);
     }
 
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
         position.x = luidetest.body.getPosition().x * PPM;
-        position.y = luidetest.body.getPosition().y * PPM;
+        //position.y = luidetest.body.getPosition().y * PPM;
         camera.position.set(position);
 
         camera.update();
