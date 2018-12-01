@@ -89,6 +89,8 @@ public class Testlui extends Actor {
         body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
     }
 
+
+
     @Override
     public void act(float delta) {
         inputUpdate(delta);
