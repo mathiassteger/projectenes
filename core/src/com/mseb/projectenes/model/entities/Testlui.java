@@ -70,7 +70,7 @@ public class Testlui extends Actor {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 1f;
         fixtureDef.friction = 0.000001f;
-        fixtureDef.restitution = 0.1f;
+        fixtureDef.restitution = 0.001f;
         fixtureDef.shape = circle;
 
         pBody = Model.world.getWorld().createBody(def);
