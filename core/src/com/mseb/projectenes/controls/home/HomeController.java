@@ -20,7 +20,6 @@ import com.mseb.projectenes.model.entities.Goodie;
 import com.mseb.projectenes.model.entities.LuiWorld;
 import com.mseb.projectenes.model.entities.Testlui;
 import com.mseb.projectenes.utilities.GameLayer;
-import com.mseb.projectenes.utilities.propertychanges.PropertyChangeListener;
 
 import java.util.ArrayList;
 

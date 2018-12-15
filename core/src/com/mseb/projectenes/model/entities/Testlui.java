@@ -46,9 +46,9 @@ public class Testlui extends Actor {
         Model.world.subscribeToGoodiePCS(new PropertyChangeListener() {
             @Override
             public void propertyChange(Object oldValue, Object newValue) {
-                int value = (Integer) newValue;
-                //Gdx.app.debug("", "Applying force to center");
-                Testlui.this.body.applyForceToCenter(0, value, false);
+                Goodie g = (Goodie) oldValue;
+                Gdx.app.debug("", "Applying force to center");
+                Testlui.this.body.applyForceToCenter(0, g.value, false);
             }
         });
     }
