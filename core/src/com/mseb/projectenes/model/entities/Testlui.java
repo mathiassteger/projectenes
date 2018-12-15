@@ -46,9 +46,9 @@ public class Testlui extends Actor {
         Model.world.subscribeToGoodiePCS(new PropertyChangeListener() {
             @Override
             public void propertyChange(Object oldValue, Object newValue) {
-                int value = (Integer) newValue;
-                //Gdx.app.debug("", "Applying force to center");
-                Testlui.this.body.applyForceToCenter(0, value, false);
+                Goodie g = (Goodie) oldValue;
+                Gdx.app.debug("", "Applying force to center");
+                Testlui.this.body.applyForceToCenter(0, g.value, false);
             }
         });
     }
@@ -68,7 +68,7 @@ public class Testlui extends Actor {
         CircleShape circle = new CircleShape();
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 100f;
+        fixtureDef.density = 1f;
         fixtureDef.friction = 0.000001f;
         fixtureDef.restitution = 0.1f;
         fixtureDef.shape = circle;

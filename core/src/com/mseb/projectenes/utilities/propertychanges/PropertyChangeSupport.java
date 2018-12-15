@@ -1,7 +1,5 @@
 package com.mseb.projectenes.utilities.propertychanges;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +25,7 @@ public class PropertyChangeSupport {
 
     public void firePropertyChange(Object oldValue, Object newValue) {
         for (PropertyChangeListener next : listeners) {
-            try {
-                next.propertyChange(oldValue, newValue);
-            } catch (Throwable t) {
-                Gdx.app.error("", t.toString());
-            }
+            next.propertyChange(oldValue, newValue);
         }
     }
 }

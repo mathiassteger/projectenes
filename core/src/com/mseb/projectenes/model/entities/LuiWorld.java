@@ -26,18 +26,7 @@ public class LuiWorld {
 
             @Override
             public void beginContact(Contact contact) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
 
-                // Check if Goodie somehow
-
-                if (Model.goodies.containsKey(fixtureA)) {
-                    //Gdx.app.debug("", "Firing GoodiePropertyChange");
-                    goodiePCS.firePropertyChange(Model.goodies.get(fixtureA), null);
-                } else if (Model.goodies.containsKey(fixtureB)) {
-                    //Gdx.app.debug("", "Firing GoodiePropertyChange");
-                    goodiePCS.firePropertyChange(Model.goodies.get(fixtureB), null);
-                }
             }
 
             @Override
@@ -48,7 +37,18 @@ public class LuiWorld {
 
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
 
+                // Check if Goodie somehow
+
+                if (Model.goodies.containsKey(fixtureA)) {
+                    Gdx.app.debug("", "Firing GoodiePropertyChange" + fixtureA);
+                    goodiePCS.firePropertyChange(Model.goodies.get(fixtureA), null);
+                } else if (Model.goodies.containsKey(fixtureB)) {
+                    Gdx.app.debug("", "Firing GoodiePropertyChange" + fixtureB);
+                    goodiePCS.firePropertyChange(Model.goodies.get(fixtureB), null);
+                }
             }
 
             @Override

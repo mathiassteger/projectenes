@@ -19,7 +19,8 @@ public class Goodie extends Actor {
     private float imageAngle = 0;
     public Body body;
     public float radius;
-
+    public int value = 50;
+    
     public Goodie(float xpos, float ypos, float radius) {
         image = new Sprite(new Texture(Gdx.files.internal("ball.png")));
 
