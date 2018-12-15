@@ -59,8 +59,8 @@ public class HomeController implements Screen, InputProcessor {
         Model.world = new LuiWorld(new Vector2(0, -3.81f), false);
         Model.testlui = new Testlui(20f, 1f, 15);
         stage.addActor(new GameLayer());
-        Goodie g = new Goodie(50f, 20f, 15);
-        Model.goodies.put(g.body.getFixtureList().get(0), g);
+//        Goodie g = new Goodie(50f, 20f, 15);
+//        Model.goodies.put(g.body.getFixtureList().get(0), g);
         inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);

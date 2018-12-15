@@ -68,7 +68,7 @@ public class Testlui extends Actor {
         CircleShape circle = new CircleShape();
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 100f;
+        fixtureDef.density = 1f;
         fixtureDef.friction = 0.000001f;
         fixtureDef.restitution = 0.1f;
         fixtureDef.shape = circle;

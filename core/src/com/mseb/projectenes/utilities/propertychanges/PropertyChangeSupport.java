@@ -1,7 +1,5 @@
 package com.mseb.projectenes.utilities.propertychanges;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
 import java.util.List;
 
