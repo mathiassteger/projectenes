@@ -1,4 +1,4 @@
-package com.mseb.projectenes.controls.home;
+package com.mseb.projectenes.model.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mseb.projectenes.model.Model;
-import com.mseb.projectenes.utilities.box2d.B2DConstants;
+import com.mseb.projectenes.utilities.propertychanges.PropertyChangeListener;
 
 import static com.mseb.projectenes.controls.home.HomeController.camera;
 import static com.mseb.projectenes.utilities.box2d.B2DConstants.PPM;
@@ -42,6 +42,15 @@ public class Testlui extends Actor {
                 System.out.println("test");
             }
         });
+
+        Model.world.subscribeToGoodiePCS(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(Object oldValue, Object newValue) {
+                int value = (Integer) newValue;
+                Gdx.app.debug("", "Applying force to center");
+                Testlui.this.body.applyForceToCenter(0, value, false);
+            }
+        });
     }
 
     private Body createBody(float xpos, float ypos, float radius) {
@@ -64,7 +73,7 @@ public class Testlui extends Actor {
         fixtureDef.restitution = 0.6f;
         fixtureDef.shape = circle;
 
-        pBody = Model.world.createBody(def);
+        pBody = Model.world.getWorld().createBody(def);
 
         circle.setRadius(radius / PPM);
         pBody.createFixture(fixtureDef);
@@ -88,7 +97,6 @@ public class Testlui extends Actor {
 
         body.setLinearVelocity(body.getLinearVelocity().x + horizontalForce * 5, body.getLinearVelocity().y);
     }
-
 
 
     @Override

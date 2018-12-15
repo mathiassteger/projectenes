@@ -13,15 +13,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mseb.projectenes.model.Model;
+import com.mseb.projectenes.model.entities.LuiWorld;
+import com.mseb.projectenes.model.entities.Testlui;
 
 import java.util.ArrayList;
 
@@ -34,8 +30,6 @@ public class HomeController implements Screen, InputProcessor {
     private ShapeRenderer shapeRenderer;
     private Body roof, floor;
     public static OrthographicCamera camera;
-    // LUIDETEST MUSS EIGENTLICH AUS DIESER KLASSE RAUS...
-    private Testlui luidetest;
     private Box2DDebugRenderer b2dr;
 
     /**
@@ -67,50 +61,22 @@ public class HomeController implements Screen, InputProcessor {
         shapeRenderer.setColor(Color.BLACK);
         initListeners();
 
-        Model.world = new World(new Vector2(0, -3.81f), false);
-        b2dr = new Box2DDebugRenderer();
-        createCollisionListener();
+        Model.world = new LuiWorld(new Vector2(0, -3.81f), false);
 
-        this.luidetest = new Testlui(20f, 1f, 15);
-        this.stage.addActor(luidetest);
+        b2dr = new Box2DDebugRenderer();
+
+        Model.testlui = new Testlui(20f, 1f, 15);
+        this.stage.addActor(Model.testlui);
         Model.lineContainer.add(new ArrayList<Vector2>());
         floor = createKinematicLine(new Vector2(-2300 / PPM, 0 / PPM), new Vector2(2300 / PPM, 0 / PPM));
         roof = createKinematicLine(new Vector2(-2300 / PPM, 500 / PPM), new Vector2(2300 / PPM, 500 / PPM));
-        luidetest.body.applyForceToCenter(new Vector2(5000, 200), false);
-    }
-
-    private void createCollisionListener() {
-        Model.world.setContactListener(new ContactListener() {
-
-            @Override
-            public void beginContact(Contact contact) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
-                Gdx.app.log("beginContact", "between " + fixtureA.toString() + " and " + fixtureB.toString());
-            }
-
-            @Override
-            public void endContact(Contact contact) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
-                Gdx.app.log("endContact", "between " + fixtureA.toString() + " and " + fixtureB.toString());
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-            }
-
-        });
+        Model.testlui.body.applyForceToCenter(new Vector2(5000, 200), false);
     }
 
 
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
-        position.x = luidetest.body.getPosition().x * PPM;
+        position.x = Model.testlui.body.getPosition().x * PPM;
         //position.y = luidetest.body.getPosition().y * PPM;
         camera.position.set(position);
 
@@ -124,7 +90,7 @@ public class HomeController implements Screen, InputProcessor {
         def.type = BodyDef.BodyType.KinematicBody;
         def.fixedRotation = true;
 
-        pBody = Model.world.createBody(def);
+        pBody = Model.world.getWorld().createBody(def);
 
         EdgeShape shape = new EdgeShape();
         shape.set(v1, v2);
@@ -141,7 +107,7 @@ public class HomeController implements Screen, InputProcessor {
         def.type = BodyDef.BodyType.StaticBody;
         def.fixedRotation = true;
 
-        pBody = Model.world.createBody(def);
+        pBody = Model.world.getWorld().createBody(def);
 
         EdgeShape shape = new EdgeShape();
         shape.set(v1, v2);
@@ -175,21 +141,21 @@ public class HomeController implements Screen, InputProcessor {
 
         drawLines();
 
-        b2dr.render(Model.world, camera.combined.scl(PPM));
+        b2dr.render(Model.world.getWorld(), camera.combined.scl(PPM));
 
     }
 
     private void update(float delta) {
-        Model.world.step(1 / 60f, 6, 2);
+        Model.world.getWorld().step(1 / 60f, 6, 2);
         cameraUpdate(delta);
 
 
-        floor.setLinearVelocity(luidetest.body.getLinearVelocity().x, 0);
-        roof.setLinearVelocity(luidetest.body.getLinearVelocity().x, 0);
+        floor.setLinearVelocity(Model.testlui.body.getLinearVelocity().x, 0);
+        roof.setLinearVelocity(Model.testlui.body.getLinearVelocity().x, 0);
     }
 
     /**
-     * Calculates camera-coordinates to world-coordinates
+     * Calculates camera-coordinates to LuiWorld-coordinates
      *
      * @param x
      * @param y

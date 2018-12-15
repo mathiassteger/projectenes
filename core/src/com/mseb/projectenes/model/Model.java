@@ -3,9 +3,10 @@ package com.mseb.projectenes.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mseb.projectenes.controls.home.HomeController;
+import com.mseb.projectenes.model.entities.Testlui;
+import com.mseb.projectenes.model.entities.LuiWorld;
 import com.mseb.projectenes.utilities.propertychanges.PropertyChangeSupport;
 
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ public class Model {
     public static PropertyChangeSupport screenPCS = new PropertyChangeSupport();
     public static Screen screen;
     public static Skin skin;
+    public static Testlui testlui;
     public static volatile ArrayList<ArrayList<Vector2>> lineContainer = new ArrayList();
-    public static World world;
+    public static LuiWorld world;
 
     private Model() {
     }
@@ -31,7 +33,7 @@ public class Model {
     }
 
     public void setScreen(Screen screen) {
-        this.screen = screen;
+        Model.screen = screen;
         screenPCS.firePropertyChange(null, screen);
     }
 }
