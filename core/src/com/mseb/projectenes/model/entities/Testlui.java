@@ -62,15 +62,15 @@ public class Testlui extends Actor {
 
         def.fixedRotation = true;
         def.bullet = true;
-        def.angularDamping = 0.9f;
-        def.linearDamping = 0.09f;
+        def.angularDamping = 3f;
+        def.linearDamping = 0.0f;
 
         CircleShape circle = new CircleShape();
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 0.4f;
+        fixtureDef.density = 100f;
         fixtureDef.friction = 0.000001f;
-        fixtureDef.restitution = 0.6f;
+        fixtureDef.restitution = 0.1f;
         fixtureDef.shape = circle;
 
         pBody = Model.world.getWorld().createBody(def);

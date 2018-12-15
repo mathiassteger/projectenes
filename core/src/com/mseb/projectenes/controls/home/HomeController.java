@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -29,6 +30,7 @@ import static com.mseb.projectenes.utilities.box2d.B2DConstants.PPM;
 public class HomeController implements Screen, InputProcessor {
     private Stage stage;
     private InputMultiplexer inputMultiplexer;
+    private Bezier<Vector2> path1;
     private ShapeRenderer shapeRenderer;
     private Body roof, floor;
     public static OrthographicCamera camera;
@@ -186,8 +188,18 @@ public class HomeController implements Screen, InputProcessor {
     private void drawLines() {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
+                float t = i /100f;
+
+                path1 = new Bezier<Vector2>(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1));
+
+                Vector2 st = new Vector2();
+                Vector2 end = new Vector2();
+
+                path1.valueAt(st, t);
+                path1.valueAt(end, t-0.01f);
+
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                shapeRenderer.line(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1));
+                shapeRenderer.line(st.x, st.y, end.x, end.y);
                 shapeRenderer.end();
             }
         }
