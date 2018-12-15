@@ -189,19 +189,22 @@ public class HomeController implements Screen, InputProcessor {
     private void drawLines() {
         for (int h = 0; h < Model.lineContainer.size(); h++) {
             for (int i = 0; i < Model.lineContainer.get(h).size() - 1; i++) {
-                float t = i /100f;
-
                 path1 = new Bezier<Vector2>(Model.lineContainer.get(h).get(i), Model.lineContainer.get(h).get(i + 1));
 
-                Vector2 st = new Vector2();
-                Vector2 end = new Vector2();
+                for (int b = 0; b < 100; ++b) {
+                    float t = b / 100f;
 
-                path1.valueAt(st, t);
-                path1.valueAt(end, t-0.01f);
 
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                shapeRenderer.line(st.x, st.y, end.x, end.y);
-                shapeRenderer.end();
+                    Vector2 st = new Vector2();
+                    Vector2 end = new Vector2();
+
+                    path1.valueAt(st, t);
+                    path1.valueAt(end, t - 0.01f);
+
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                    shapeRenderer.line(st.x, st.y, end.x, end.y);
+                    shapeRenderer.end();
+                }
             }
         }
     }
