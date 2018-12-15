@@ -1,10 +1,12 @@
 package com.mseb.projectenes.utilities.propertychanges;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- GWT CAN'T HANDLE BEANS, REWRITE PCS-SYSTEM
+ * GWT CAN'T HANDLE BEANS, REWRITE PCS-SYSTEM
  */
 
 public class PropertyChangeSupport {
@@ -28,7 +30,7 @@ public class PropertyChangeSupport {
             try {
                 next.propertyChange(oldValue, newValue);
             } catch (Throwable t) {
-                System.out.println(t.toString());
+                Gdx.app.error("", t.toString());
             }
         }
     }

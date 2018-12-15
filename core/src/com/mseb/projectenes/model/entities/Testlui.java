@@ -47,7 +47,7 @@ public class Testlui extends Actor {
             @Override
             public void propertyChange(Object oldValue, Object newValue) {
                 int value = (Integer) newValue;
-                Gdx.app.debug("", "Applying force to center");
+                //Gdx.app.debug("", "Applying force to center");
                 Testlui.this.body.applyForceToCenter(0, value, false);
             }
         });

@@ -16,8 +16,11 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mseb.projectenes.model.Model;
+import com.mseb.projectenes.model.entities.Goodie;
 import com.mseb.projectenes.model.entities.LuiWorld;
 import com.mseb.projectenes.model.entities.Testlui;
+import com.mseb.projectenes.utilities.GameLayer;
+import com.mseb.projectenes.utilities.propertychanges.PropertyChangeListener;
 
 import java.util.ArrayList;
 
@@ -52,21 +55,19 @@ public class HomeController implements Screen, InputProcessor {
         camera.setToOrtho(false, width / scale, height / scale);
 
         stage = new Stage();
-
+        Model.world = new LuiWorld(new Vector2(0, -3.81f), false);
+        Model.testlui = new Testlui(20f, 1f, 15);
+        stage.addActor(new GameLayer());
+        Goodie g = new Goodie(50f, 20f, 15);
+        Model.goodies.put(g.body.getFixtureList().get(0), g);
         inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setColor(Color.BLACK);
-        initListeners();
-
-        Model.world = new LuiWorld(new Vector2(0, -3.81f), false);
-
         b2dr = new Box2DDebugRenderer();
 
-        Model.testlui = new Testlui(20f, 1f, 15);
-        this.stage.addActor(Model.testlui);
         Model.lineContainer.add(new ArrayList<Vector2>());
         floor = createKinematicLine(new Vector2(-2300 / PPM, 0 / PPM), new Vector2(2300 / PPM, 0 / PPM));
         roof = createKinematicLine(new Vector2(-2300 / PPM, 500 / PPM), new Vector2(2300 / PPM, 500 / PPM));
@@ -115,10 +116,6 @@ public class HomeController implements Screen, InputProcessor {
         shape.dispose();
 
         return pBody;
-    }
-
-    private void initListeners() {
-
     }
 
     @Override
